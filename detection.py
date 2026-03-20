@@ -27,22 +27,19 @@ from skimage.filters import gaussian
 # via **kw, or tuned interactively through the calibration step in the pipeline.
 DEFAULT = dict(
     # Standard deviation (px) of the Gaussian blur applied to the max projection
-    # before LoG detection.  Larger values smooth out shot noise but may merge
-    # closely spaced cells.  Should be roughly half the radius of a typical cell.
+    # before LoG detection.Larger values smooth out shot noise but may merge
     gauss_sigma=6.0,
 
     # Smallest LoG sigma to test (px).  The pipeline overwrites this after the
-    # interactive calibration step (sigma ≈ cell_radius / sqrt(2)).  Increase if
-    # the detector is picking up sub-cellular speckles.
+    # interactive calibration step (sigma ≈ cell_radius / sqrt(2)).
     min_sigma=6,
 
-    # Largest LoG sigma to test (px).  Also overwritten by calibration.  Increase
-    # if large cells are being missed; decrease to speed up detection.
+    # Largest LoG sigma to test (px).  Also overwritten by calibration.
     max_sigma=30,
 
     # Number of sigma values sampled logarithmically between min_sigma and
     # max_sigma.  More steps give finer size resolution at the cost of runtime.
-    num_sigma=20,
+    num_sigma=30,
 
     # Absolute LoG response threshold.  Blobs with a peak LoG response below this
     # value are discarded.  Lower values detect dimmer/weaker cells but increase
@@ -50,9 +47,9 @@ DEFAULT = dict(
     blob_threshold=0.1,
 
     # Maximum allowed fractional overlap between two detected blobs (0–1).  Blobs
-    # that overlap by more than this fraction are merged (the weaker one is
-    # dropped).  Lower values keep more closely packed cells separate; higher
-    # values suppress duplicate detections of the same cell.
+    # that overlap by more than this fraction are merged.  Lower values keep 
+    #more closely packed cells separate; higher values suppress duplicate 
+    #detections of the same cell.
     overlap=0.75,
 )
 
