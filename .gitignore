@@ -1,0 +1,24 @@
+
+# Virtual environment
+venv/
+
+# Raw imaging data (large binary files)
+*.tif
+*.tiff
+
+# Pipeline outputs
+*.npy
+*.mp4
+output_*/
+
+# Diagnostic / intermediate images (regenerated on each run)
+diag_*.png
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# macOS
+.DS_Store
