@@ -45,6 +45,14 @@ Optional: specify a custom output directory (defaults to the same folder as the 
 ./run.sh path/to/your_imaging_file.tif --outdir path/to/output
 ```
 
+All path forms are supported — absolute, relative, and `~`-prefixed:
+
+```bash
+./run.sh ~/Documents/data/my_recording.tif
+./run.sh /Users/alice/data/my_recording.tif
+./run.sh my_recording.tif          # relative to current directory
+```
+
 ### 2 — Manually correct ROIs with the GUI
 
 After the pipeline runs, launch the interactive editor to add or remove cells:
@@ -127,6 +135,7 @@ output_YYYY-MM-DD/
 
 ## Notes
 
+- **Path resolution**: both scripts expand `~` before resolving the path, so `~/path/to/file.tif` works correctly alongside absolute and relative paths.
 - **`venv/`**, raw **`.tif`** files, **`.npy`** arrays, and **`.mp4`** videos are all gitignored — only source code and sample PNGs are tracked.
 - The pipeline uses the macOS `MacOSX` matplotlib backend for interactive calibration clicks. On Linux, change `matplotlib.use("MacOSX")` to `matplotlib.use("TkAgg")` in both `SigProcessingPipeline.py` and `cell_editor_gui.py`.
 - If you use Anaconda, the `./run.sh` wrapper automatically clears `PYTHONPATH` and `PYTHONHOME` to prevent package conflicts.

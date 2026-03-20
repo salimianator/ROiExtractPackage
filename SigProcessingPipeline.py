@@ -223,7 +223,7 @@ def _save_diagnostic(label_img, max_proj_norm, title, out_path):
 def main():
     args = _parse_args()
 
-    tiff_path = os.path.abspath(args.tiff)
+    tiff_path = os.path.abspath(os.path.expanduser(args.tiff))
     if not os.path.isfile(tiff_path):
         sys.exit(f"ERROR: TIFF file not found: {tiff_path}")
 

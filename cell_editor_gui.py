@@ -511,10 +511,10 @@ class CellEditor:
 # ── entry point ────────────────────────────────────────────────────────────────
 def launch_editor():
     args = _parse_args()
-    tiff_path = os.path.abspath(args.tiff)
+    tiff_path = os.path.abspath(os.path.expanduser(args.tiff))
     if not os.path.isfile(tiff_path):
         sys.exit(f"ERROR: TIFF file not found: {tiff_path}")
-    mask_path = os.path.abspath(args.mask) if args.mask else None
+    mask_path = os.path.abspath(os.path.expanduser(args.mask)) if args.mask else None
     CellEditor(tiff_path, mask_path)
 
 
