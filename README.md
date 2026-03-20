@@ -55,7 +55,15 @@ All path forms are supported — absolute, relative, and `~`-prefixed:
 
 ### 2 — Manually correct ROIs with the GUI
 
-After the pipeline runs, launch the interactive editor to add or remove cells:
+After the pipeline runs, launch the interactive editor — **no arguments needed**:
+
+```bash
+python cell_editor_gui.py
+```
+
+The GUI automatically inherits the TIFF path from the most recent pipeline run (stored in `.last_run.json`), so you never have to type it again.
+
+You can still pass the path explicitly if you want to open a different file:
 
 ```bash
 python cell_editor_gui.py path/to/your_imaging_file.tif
@@ -136,6 +144,7 @@ output_YYYY-MM-DD/
 ## Notes
 
 - **Path resolution**: both scripts expand `~` before resolving the path, so `~/path/to/file.tif` works correctly alongside absolute and relative paths.
+- **`.last_run.json`** is written by the pipeline on every run and read by the GUI so the TIFF path does not need to be passed again. It is gitignored.
 - **`venv/`**, raw **`.tif`** files, **`.npy`** arrays, and **`.mp4`** videos are all gitignored — only source code and sample PNGs are tracked.
 - The pipeline uses the macOS `MacOSX` matplotlib backend for interactive calibration clicks. On Linux, change `matplotlib.use("MacOSX")` to `matplotlib.use("TkAgg")` in both `SigProcessingPipeline.py` and `cell_editor_gui.py`.
 - If you use Anaconda, the `./run.sh` wrapper automatically clears `PYTHONPATH` and `PYTHONHOME` to prevent package conflicts.

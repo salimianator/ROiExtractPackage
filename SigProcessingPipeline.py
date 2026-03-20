@@ -18,6 +18,7 @@ Steps
 """
 
 import argparse
+import json
 import os
 import sys
 
@@ -229,6 +230,13 @@ def main():
 
     BASE = args.outdir if args.outdir else os.path.dirname(tiff_path)
     os.makedirs(BASE, exist_ok=True)
+
+    # ── persist run state so the GUI can find the TIFF without re-typing the path
+    _script_dir = os.path.dirname(os.path.abspath(__file__))
+    _state_path = os.path.join(_script_dir, ".last_run.json")
+    with open(_state_path, "w") as _f:
+        json.dump({"tiff_path": tiff_path, "outdir": BASE}, _f, indent=2)
+    print(f"[state] saved last-run info → {_state_path}")
 
     def out(fname):
         return os.path.join(BASE, fname)

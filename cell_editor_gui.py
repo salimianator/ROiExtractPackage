@@ -24,6 +24,7 @@ Save         [s]   : run full pipeline → output_YYYY-MM-DD/ folder
 
 import argparse
 import glob
+import json
 import os
 import sys
 import threading
@@ -49,11 +50,34 @@ from detection import fit_ellipse_pca
 
 
 # ── CLI ────────────────────────────────────────────────────────────────────────
+_SCRIPT_DIR  = os.path.dirname(os.path.abspath(__file__))
+_STATE_FILE  = os.path.join(_SCRIPT_DIR, ".last_run.json")
+
+
+def _load_last_run_state():
+    """Return the tiff_path saved by the most recent pipeline run, or None."""
+    if os.path.isfile(_STATE_FILE):
+        try:
+            with open(_STATE_FILE) as f:
+                return json.load(f)
+        except (json.JSONDecodeError, KeyError):
+            pass
+    return None
+
+
 def _parse_args():
     parser = argparse.ArgumentParser(
         description="Interactive cell label editor for fluorescence imaging."
     )
-    parser.add_argument("tiff", help="Path to the input TIFF imaging file.")
+    parser.add_argument(
+        "tiff",
+        nargs="?",
+        default=None,
+        help=(
+            "Path to the input TIFF imaging file.  "
+            "If omitted, the path from the most recent pipeline run is used."
+        ),
+    )
     parser.add_argument(
         "mask",
         nargs="?",
@@ -511,9 +535,27 @@ class CellEditor:
 # ── entry point ────────────────────────────────────────────────────────────────
 def launch_editor():
     args = _parse_args()
-    tiff_path = os.path.abspath(os.path.expanduser(args.tiff))
+
+    # ── resolve TIFF path ──────────────────────────────────────────────────────
+    if args.tiff:
+        tiff_path = os.path.abspath(os.path.expanduser(args.tiff))
+    else:
+        state = _load_last_run_state()
+        if state and "tiff_path" in state:
+            tiff_path = state["tiff_path"]
+            print(f"[GUI] No TIFF path given — using last pipeline run: {tiff_path}")
+        else:
+            sys.exit(
+                "ERROR: No TIFF path provided and no previous pipeline run found.\n"
+                "Run the pipeline first with:\n"
+                "  ./run.sh path/to/your_imaging_file.tif\n"
+                "or pass the path directly:\n"
+                "  python cell_editor_gui.py path/to/your_imaging_file.tif"
+            )
+
     if not os.path.isfile(tiff_path):
         sys.exit(f"ERROR: TIFF file not found: {tiff_path}")
+
     mask_path = os.path.abspath(os.path.expanduser(args.mask)) if args.mask else None
     CellEditor(tiff_path, mask_path)
 

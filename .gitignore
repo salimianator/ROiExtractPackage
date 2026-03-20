@@ -20,5 +20,8 @@ __pycache__/
 *.pyo
 *.pyd
 
+# Runtime state (auto-generated, machine-specific)
+.last_run.json
+
 # macOS
 .DS_Store
