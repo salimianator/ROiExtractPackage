@@ -58,7 +58,7 @@ All path forms are supported — absolute, relative, and `~`-prefixed:
 After the pipeline runs, launch the interactive editor — **no arguments needed**:
 
 ```bash
-python cell_editor_gui.py
+./run_gui.sh
 ```
 
 The GUI automatically inherits the TIFF path from the most recent pipeline run (stored in `.last_run.json`), so you never have to type it again.
@@ -66,14 +66,16 @@ The GUI automatically inherits the TIFF path from the most recent pipeline run (
 You can still pass the path explicitly if you want to open a different file:
 
 ```bash
-python cell_editor_gui.py path/to/your_imaging_file.tif
+./run_gui.sh path/to/your_imaging_file.tif
 ```
 
 Pass a specific labeled mask to edit (otherwise the most recent `output_YYYY-MM-DD/labeled_mask.npy` is loaded automatically):
 
 ```bash
-python cell_editor_gui.py path/to/your_imaging_file.tif path/to/labeled_mask.npy
+./run_gui.sh path/to/your_imaging_file.tif path/to/labeled_mask.npy
 ```
+
+> **Important:** always use `./run_gui.sh` rather than calling `python cell_editor_gui.py` directly. The wrapper ensures the correct venv Python is used and prevents NumPy/matplotlib version conflicts with any system or Anaconda installation.
 
 **GUI controls:**
 
@@ -147,4 +149,4 @@ output_YYYY-MM-DD/
 - **`.last_run.json`** is written by the pipeline on every run and read by the GUI so the TIFF path does not need to be passed again. It is gitignored.
 - **`venv/`**, raw **`.tif`** files, **`.npy`** arrays, and **`.mp4`** videos are all gitignored — only source code and sample PNGs are tracked.
 - The pipeline uses the macOS `MacOSX` matplotlib backend for interactive calibration clicks. On Linux, change `matplotlib.use("MacOSX")` to `matplotlib.use("TkAgg")` in both `SigProcessingPipeline.py` and `cell_editor_gui.py`.
-- If you use Anaconda, the `./run.sh` wrapper automatically clears `PYTHONPATH` and `PYTHONHOME` to prevent package conflicts.
+- If you use Anaconda, both `./run.sh` and `./run_gui.sh` automatically clear `PYTHONPATH` and `PYTHONHOME` to prevent NumPy/matplotlib version conflicts. Never invoke the scripts with `python` directly.
